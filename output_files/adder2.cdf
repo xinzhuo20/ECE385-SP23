@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(10M50DAF484) Path("D:/Installation_location/quartus/Lab_code/lab6.2/output_files/") File("adder2.sof") MfrSpec(OpMask(1));
+		Device PartName(10M50DAF484) Path("D:/github_repositories/ECE385-SP23/output_files/") File("adder2.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

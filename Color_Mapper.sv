@@ -35,6 +35,12 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	 assign DistX = DrawX - BallX;
     assign DistY = DrawY - BallY;
     assign Size = Ball_size;
+	 
+	 
+	 assign CharacterRGB[OffsetY][OffsetX][2:0] = PixelData[2:0];
+	 assign CharacterRGB[OffsetY][OffsetX][5:3] = PixelData[5:3];
+	 assign CharacterRGB[OffsetY][OffsetX][8:6] = PixelData[8:6];
+
 	  
     always_comb
     begin:Ball_on_proc
