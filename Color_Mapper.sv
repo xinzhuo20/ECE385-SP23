@@ -14,11 +14,12 @@
 
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
-                       output logic [7:0]  Red, Green, Blue );
+							  input logic [23:0] CharacterRGB,
+							  input logic [7:0] Address,
+                       output logic [7:0]  Red, Green, Blue,
+							  output logic ball_on,
+							  output logic [11:0] OffsetX, OffsetY);
     
-    logic ball_on;
-	 logic [23:0] CharacterRGB;
-	 logic [7:0] Address;
 
  /* Old Ball: Generated square box by checking if the current pixel is within a square of length
     2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
@@ -33,13 +34,12 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
      of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
 	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
 	  
-    int DistX, DistY, Size, OffsetX, OffsetY;
+    int DistX, DistY, Size;
 	 assign DistX = DrawX - BallX;
     assign DistY = DrawY - BallY;
     assign Size = Ball_size;
     assign OffsetX = DrawX - BallX;
     assign OffsetY = DrawY - BallY; 
-	 assign Address = DrawX + DrawY * 16;
 
 	 
     always_comb
@@ -48,20 +48,15 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
             ball_on = 1'b1;
         else 
             ball_on = 1'b0;
-     end 
-	  
-	 
-	 MarioROM Mario0 (.*);
-	  
-	  
+     end 	  
 	  
     always_comb
     begin:RGB_Display
         if (ball_on)
         begin 
-            Red = CharacterRGB[7:0];
+            Red = CharacterRGB[23:16];
             Green = CharacterRGB[15:8];
-            Blue = CharacterRGB[23:16];
+            Blue = CharacterRGB[7:0];
         end
         else 
         begin 

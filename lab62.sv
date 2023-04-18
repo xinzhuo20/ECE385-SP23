@@ -160,30 +160,32 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 
 
 //instantiate a vga_controller, ball, and color_mapper here with the ports.
-
-//module  vga_controller ( input        Clk,       // 50 MHz clock
-//                                      Reset,     // reset signal
-//                         output logic hs,        // Horizontal sync pulse.  Active low
-//								              vs,        // Vertical sync pulse.  Active low
-//												  pixel_clk, // 25 MHz pixel clock output
-//												  blank,     // Blanking interval indicator.  Active low.
-//												  sync,      // Composite Sync signal.  Active low.  We don't use it in this lab,
-//												             //   but the video DAC on the DE2 board requires an input for it.
-//								 output [9:0] DrawX,     // horizontal coordinate
-//								              DrawY );   // vertical coordinate
 												  											  
 vga_controller vga0 (.*, .Clk (MAX10_CLK1_50), .Reset (Reset_h), .hs (VGA_HS), .vs (VGA_VS), .pixel_clk(VGA_CLK), .DrawX (drawxsig), .DrawY (drawysig));
 
-//module  ball ( input Reset, frame_clk,
-//					input [7:0] keycode,
-//               output [9:0]  BallX, BallY, BallS);
-
-	
 ball ball0 (.Reset (Reset_h), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig), .BallY (ballysig), .BallS (ballsizesig));
 
-//module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
-//                       output logic [7:0]  Red, Green, Blue );
 color_mapper cm0 (.*, .BallX (ballxsig), .BallY (ballysig), .DrawX (drawxsig), .DrawY (drawysig), .Ball_size (ballsizesig));
+
+logic [7:0] Address;
+logic [11:0] OffsetX, OffsetY;
+logic [8:0] PixelData;
+logic ball_on;
+logic [23:0] CharacterRGB;
+
+MarioROM Mario0 (.*);
+
+// Calculate the Address based on OffsetX and OffsetY
+// Facing left side
+assign Address = (ball_on) ? ((16 - OffsetY) * 16) + OffsetX : 8'b0;
+//assign Address = (ball_on) ? ((16 - OffsetY) * 16) + (16 - OffsetX) : 8'b0;
+
+
+//// Connect PixelData to CharacterRGB input of the color_mapper module
+//assign CharacterRGB[7:0] = PixelData[2:0] * 8'hff / 7;
+//assign CharacterRGB[15:8] = PixelData[5:3] * 8'hff / 7;
+//assign CharacterRGB[23:16] = PixelData[8:6] * 8'hff / 7;
+
 
 
 endmodule
