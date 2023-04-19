@@ -34,13 +34,15 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
      of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
 	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
 	  
+	 logic [23:0] BackgroundRGB;
     int DistX, DistY, Size;
 	 assign DistX = DrawX - BallX;
     assign DistY = DrawY - BallY;
     assign Size = Ball_size;
     assign OffsetX = DrawX - BallX;
-    assign OffsetY = DrawY - BallY; 
-
+    assign OffsetY = DrawY - BallY;
+	 
+//	 background baoguo (.back_address(BallY*640+BallX), .*);
 	 
     always_comb
     begin:Ball_on_proc
@@ -60,6 +62,9 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
         end
         else 
         begin 
+//            Red = BackgroundRGB[23:16];
+//            Green = BackgroundRGB[15:8];
+//            Blue = BackgroundRGB[7:0];
             Red = 8'h00; 
             Green = 8'h00;
             Blue = 8'h7f - DrawX[9:3];

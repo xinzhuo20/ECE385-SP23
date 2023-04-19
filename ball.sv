@@ -19,12 +19,15 @@ module  ball ( input Reset, frame_clk,
     
     logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
 	 
-    parameter [9:0] Ball_X_Center=320;  // Center position on the X axis
-    parameter [9:0] Ball_Y_Center=240;  // Center position on the Y axis
+	 int Initial_velocity = -10;
+	 logic [2:0] gravity = 1;
+	 
+    parameter [9:0] Ball_X_Center=100;  // Center position on the X axis
+    parameter [9:0] Ball_Y_Center=463;  // Center position on the Y axis
     parameter [9:0] Ball_X_Min=0;       // Leftmost point on the X axis
     parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
-    parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
+    parameter [9:0] Ball_Y_Max=463;     // Bottommost point on the Y axis
     parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
     parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
 
@@ -38,29 +41,44 @@ module  ball ( input Reset, frame_clk,
 				Ball_X_Motion <= 10'd0; //Ball_X_Step;
 				Ball_Y_Pos <= Ball_Y_Center;
 				Ball_X_Pos <= Ball_X_Center;
+				
+				
+				
+				// Used when the fram_clk is not proper for achieving the function
+//				update_counter <= update_counter + 1;
+//				if (update_counter >=  2000000)
+//					begin
+//						update_counter <= 0;
+
+						
         end
            
         else 
         begin 
-				 if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
+		  
+		  // Not neccessary
+//				 if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
+//					begin
+//					  Ball_Y_Motion <= 0;
+////					  Ball_X_Motion <= 0;
+//					end
+				 if (Ball_Y_Pos > Ball_Y_Max)  // Ball is at the top edge, BOUNCE!
 					begin
-					  Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);  // 2's complement.
-					  Ball_X_Motion <= 0;
+					  Ball_Y_Motion <= 0;
+					  Ball_Y_Pos <= Ball_Y_Max;
+//					  Ball_X_Motion <= 0;
 					end
-				 else if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
-					begin
-					  Ball_Y_Motion <= Ball_Y_Step;
-					  Ball_X_Motion <= 0;
-					end
-				  else if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
+				  else if ( Ball_X_Pos >= Ball_X_Max - 1)  // Ball is at the Right edge, BOUNCE!
 				   begin
-					  Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);  // 2's complement.
-					  Ball_Y_Motion <= 0;
+					  Ball_X_Motion <= 0;
+					  Ball_X_Pos <= Ball_X_Max;
+//					  Ball_Y_Motion <= 0;
 					end 
-				 else if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
+				 else if ( Ball_X_Pos <= Ball_X_Min + 1)  // Ball is at the Left edge, BOUNCE!
 				  begin
-					  Ball_X_Motion <= Ball_X_Step;
-					  Ball_Y_Motion <= 0;
+					  Ball_X_Motion <= 0;
+					  Ball_X_Pos <= Ball_X_Min;
+//					  Ball_Y_Motion <= 0;
 				  end
 					  
 					  
@@ -70,42 +88,45 @@ module  ball ( input Reset, frame_clk,
 				 
 				 case (keycode)
 					8'h04 : begin
-							  if ( Ball_X_Min < (Ball_X_Pos - Ball_Size) && Ball_X_Max > (Ball_X_Pos - Ball_Size))
+							  if (Ball_X_Pos > Ball_X_Min)
 									Ball_X_Motion <= -1;//A
 							  else
 									Ball_X_Motion <= 0;
-							  Ball_Y_Motion <= 0;
 								end
 							  
 					        
 					8'h07 : begin
-							  if ( (Ball_X_Pos + Ball_Size) < Ball_X_Max )
+							  if (Ball_X_Pos < Ball_X_Max)
 									Ball_X_Motion <= 1;//D
 							  else
 									Ball_X_Motion <= 0;
-							  Ball_Y_Motion <= 0;
 							  end
 							  
 							  
-					8'h16 : begin
-							  if (Ball_Y_Pos + Ball_Size < Ball_Y_Max)
-									Ball_Y_Motion <= 1;//S
-							  else
-									Ball_Y_Motion <= 0;
-							  Ball_X_Motion <= 0;
-							 end
+//					8'h16 : begin
+//							  if (Ball_Y_Pos + Ball_Size < Ball_Y_Max)
+//									Ball_Y_Motion <= 1;//S
+//							  else
+//									Ball_Y_Motion <= 0;
+//							  Ball_X_Motion <= 0;
+//							 end
 
 							 
 					8'h1A : begin
-								if ( (Ball_Y_Pos - Ball_Size > Ball_Y_Min) && (Ball_Y_Pos - Ball_Size < Ball_Y_Max) )
-									Ball_Y_Motion <= -1;//W
-								else
-									Ball_Y_Motion <= 0;
-							  Ball_X_Motion <= 0;
-							 end
+								if (Ball_Y_Pos == Ball_Y_Max)
+									Ball_Y_Motion <= Initial_velocity;
+							  end
+									
 
-					default: ;
+					default:
+						begin
+							Ball_X_Motion <= 0;
+						end
+							
 			   endcase
+				 
+				 if (Ball_Y_Pos < Ball_Y_Max)
+					Ball_Y_Motion <= Ball_Y_Motion + gravity;
 				 
 				 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);

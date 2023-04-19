@@ -181,11 +181,4 @@ assign Address = (ball_on) ? ((16 - OffsetY) * 16) + OffsetX : 8'b0;
 //assign Address = (ball_on) ? ((16 - OffsetY) * 16) + (16 - OffsetX) : 8'b0;
 
 
-//// Connect PixelData to CharacterRGB input of the color_mapper module
-//assign CharacterRGB[7:0] = PixelData[2:0] * 8'hff / 7;
-//assign CharacterRGB[15:8] = PixelData[5:3] * 8'hff / 7;
-//assign CharacterRGB[23:16] = PixelData[8:6] * 8'hff / 7;
-
-
-
 endmodule
