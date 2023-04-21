@@ -23,11 +23,11 @@ module  ball ( input Reset, frame_clk,
 	 logic [2:0] gravity = 1;
 	 
     parameter [9:0] Ball_X_Center=100;  // Center position on the X axis
-    parameter [9:0] Ball_Y_Center=463;  // Center position on the Y axis
+    parameter [9:0] Ball_Y_Center=450;  // Center position on the Y axis
     parameter [9:0] Ball_X_Min=0;       // Leftmost point on the X axis
     parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
-    parameter [9:0] Ball_Y_Max=463;     // Bottommost point on the Y axis
+    parameter [9:0] Ball_Y_Max=450;     // Bottommost point on the Y axis
     parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
     parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
 
@@ -68,13 +68,13 @@ module  ball ( input Reset, frame_clk,
 					  Ball_Y_Pos <= Ball_Y_Max;
 //					  Ball_X_Motion <= 0;
 					end
-				  else if ( Ball_X_Pos >= Ball_X_Max - 1)  // Ball is at the Right edge, BOUNCE!
+				  else if ( Ball_X_Pos >= Ball_X_Max - 18)  // Ball is at the Right edge, BOUNCE!
 				   begin
 					  Ball_X_Motion <= 0;
 					  Ball_X_Pos <= Ball_X_Max;
 //					  Ball_Y_Motion <= 0;
 					end 
-				 else if ( Ball_X_Pos <= Ball_X_Min + 1)  // Ball is at the Left edge, BOUNCE!
+				 else if ( Ball_X_Pos <= Ball_X_Min + 18)  // Ball is at the Left edge, BOUNCE!
 				  begin
 					  Ball_X_Motion <= 0;
 					  Ball_X_Pos <= Ball_X_Min;
@@ -127,8 +127,11 @@ module  ball ( input Reset, frame_clk,
 				 
 				 if (Ball_Y_Pos < Ball_Y_Max)
 					Ball_Y_Motion <= Ball_Y_Motion + gravity;
-				 
-				 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
+				
+				 if (Ball_Y_Pos <= Ball_Y_Max)
+					 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
+				 else
+				 	 Ball_Y_Pos <= Ball_Y_Max;
 				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 			
 			
