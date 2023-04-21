@@ -13,12 +13,12 @@
 //-------------------------------------------------------------------------
 
 
-module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
-							  input logic [23:0] CharacterRGB,
-							  input logic [7:0] Address,
-                       output logic [7:0]  Red, Green, Blue,
-							  output logic ball_on,
-							  output logic [11:0] OffsetX, OffsetY);
+module  color_mapper ( input        [9:0] BallX0, BallY0, BallX1, BallY1, DrawX, DrawY, Ball_size,
+							  input logic [23:0] CharacterRGB0, CharacterRGB1,
+							  input logic [7:0] Address0, Address1,
+                       output logic [7:0] Red, Green, Blue,
+							  output logic ball_on0, ball_on1,
+							  output logic [11:0] OffsetX0, OffsetY0, OffsetX1, OffsetY1);
     
 
  /* Old Ball: Generated square box by checking if the current pixel is within a square of length
@@ -34,40 +34,57 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
      of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
 	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
 	  
-	 logic [23:0] BackgroundRGB;
-    int DistX, DistY, Size;
-	 assign DistX = DrawX - BallX;
-    assign DistY = DrawY - BallY;
-    assign Size = Ball_size;
-    assign OffsetX = DrawX - BallX;
-    assign OffsetY = DrawY - BallY;
+//	 logic [23:0] BackgroundRGB0;
+//	 logic [23:0] BackgroundRGB1;
+//    int DistX, DistY, Size;
+//	 assign DistX = DrawX - BallX;
+//    assign DistY = DrawY - BallY;
+//    assign Size = Ball_size;
+    assign OffsetX0 = DrawX - BallX0;
+    assign OffsetY0 = DrawY - BallY0;
+    assign OffsetX1 = DrawX - BallX1;
+    assign OffsetY1 = DrawY - BallY1;
 	 
 //	 background baoguo (.back_address(BallY*640+BallX), .*);
 	 
     always_comb
-    begin:Ball_on_proc
-        if ((OffsetX >= 0) && (OffsetX < 16) && (OffsetY >= 0) && (OffsetY < 16))
-            ball_on = 1'b1;
+    begin
+        if ((OffsetX0 >= 0) && (OffsetX0 < 16) && (OffsetY0 >= 0) && (OffsetY0 < 16))
+            ball_on0 = 1'b1;
         else 
-            ball_on = 1'b0;
-     end 	  
+            ball_on0 = 1'b0;	   
+	 end
+	
+	 always_comb
+	 begin
+        if ((OffsetX1 >= 0) && (OffsetX1 < 16) && (OffsetY1 >= 0) && (OffsetY1 < 16))
+            ball_on1 = 1'b1;
+        else 
+            ball_on1 = 1'b0;
+    end 	
 	  
     always_comb
     begin:RGB_Display
-        if (ball_on)
+        if (ball_on0)
         begin 
-            Red = CharacterRGB[23:16];
-            Green = CharacterRGB[15:8];
-            Blue = CharacterRGB[7:0];
+            Red = CharacterRGB0[23:16];
+            Green = CharacterRGB0[15:8];
+            Blue = CharacterRGB0[7:0];
         end
+		  
+        else if (ball_on1)
+        begin 
+            Red = CharacterRGB1[23:16];
+            Green = CharacterRGB1[15:8];
+            Blue = CharacterRGB1[7:0];
+        end
+		  
         else 
         begin 
 //            Red = BackgroundRGB[23:16];
 //            Green = BackgroundRGB[15:8];
 //            Blue = BackgroundRGB[7:0];
-            Red = 8'h00; 
-            Green = 8'h00;
-            Blue = 8'h7f - DrawX[9:3];
+            {Red, Green, Blue} = {8'hFF, 8'hD7, 8'h00};
         end      
     end 
     

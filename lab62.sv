@@ -68,7 +68,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	logic [3:0] hex_num_4, hex_num_3, hex_num_1, hex_num_0; //4 bit input hex digits
 	logic [1:0] signs;
 	logic [1:0] hundreds;
-	logic [9:0] drawxsig, drawysig, ballxsig, ballysig, ballsizesig;
+	logic [9:0] drawxsig, drawysig, ballxsig0, ballysig0, ballxsig1, ballysig1, ballsizesig;
 	logic [7:0] Red, Blue, Green;
 	logic [7:0] keycode;
 
@@ -115,10 +115,13 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	assign {Reset_h}=~ (KEY[0]);
 
 	//Our A/D converter is only 12 bit
-	assign VGA_R = Red[7:4];
-	assign VGA_B = Blue[7:4];
-	assign VGA_G = Green[7:4];
+	assign VGA_R = (~blank) ? 4'h0 : Red[7:4];
+	assign VGA_B = (~blank) ? 4'h0 : Blue[7:4];
+	assign VGA_G = (~blank) ? 4'h0 : Green[7:4];
+
 	
+//assign Address0 = (ball_on0) ? ((16 - OffsetY0) * 16) + OffsetX0 : 8'b0;
+//assign Address1 = (ball_on1) ? ((16 - OffsetY1) * 16) + OffsetX1 : 8'b0;
 	
 	lab62_soc u0 (
 		.clk_clk                           (MAX10_CLK1_50),  //clk.clk
@@ -154,8 +157,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		//LEDs and HEX
 		.hex_digits_export({hex_num_4, hex_num_3, hex_num_1, hex_num_0}),
 		.leds_export({hundreds, signs, LEDR}),
-		.keycode_export(keycode)
-		
+		.keycode_export(keycode),
 	 );
 
 
@@ -163,21 +165,27 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 												  											  
 vga_controller vga0 (.*, .Clk (MAX10_CLK1_50), .Reset (Reset_h), .hs (VGA_HS), .vs (VGA_VS), .pixel_clk(VGA_CLK), .DrawX (drawxsig), .DrawY (drawysig));
 
-ball ball0 (.Reset (Reset_h), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig), .BallY (ballysig), .BallS (ballsizesig));
+ball0 ball0 (.Reset (Reset_h), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig0), .BallY (ballysig0), .BallS (ballsizesig));
 
-color_mapper cm0 (.*, .BallX (ballxsig), .BallY (ballysig), .DrawX (drawxsig), .DrawY (drawysig), .Ball_size (ballsizesig));
+ball1 ball1 (.Reset (Reset_h), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig1), .BallY (ballysig1), .BallS (ballsizesig));
 
-logic [7:0] Address;
-logic [11:0] OffsetX, OffsetY;
-logic [8:0] PixelData;
-logic ball_on;
-logic [23:0] CharacterRGB;
+color_mapper cm0 (.*, .BallX0 (ballxsig0), .BallY0 (ballysig0), .BallX1 (ballxsig1), .BallY1 (ballysig1), .DrawX (drawxsig), .DrawY (drawysig), .Ball_size (ballsizesig));
 
-MarioROM Mario0 (.*);
+logic [7:0] Address0, Address1;
+logic [11:0] OffsetX0, OffsetY0, OffsetX1, OffsetY1;
+//logic [8:0] PixelData0, PixelData1;
+logic ball_on0, ball_on1;
+logic [23:0] CharacterRGB0, CharacterRGB1;
+
+MarioROM Mario0 (.Address(Address0),.CharacterRGB(CharacterRGB0));
+
+MarioROM Mario1 (.Address(Address1),.CharacterRGB(CharacterRGB1));
 
 // Calculate the Address based on OffsetX and OffsetY
 // Facing left side
-assign Address = (ball_on) ? ((16 - OffsetY) * 16) + OffsetX : 8'b0;
+assign Address0 = (ball_on0) ? ((16 - OffsetY0) * 16) + OffsetX0 : 8'b0;
+assign Address1 = (ball_on1) ? ((16 - OffsetY1) * 16) + OffsetX1 : 8'b0;
+
 //assign Address = (ball_on) ? ((16 - OffsetY) * 16) + (16 - OffsetX) : 8'b0;
 
 
