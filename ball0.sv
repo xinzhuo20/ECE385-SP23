@@ -34,6 +34,10 @@ module  ball0 ( input Reset, frame_clk,
 
     assign Ball_Size = 16;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
+	
+//	 assign gravity = (keycode[1]) ? 0 : 1;
+
+	 
     always_ff @ (posedge Reset or posedge frame_clk )
     begin: Move_Ball
         if (Reset)  // Asynchronous Reset
@@ -145,6 +149,9 @@ module  ball0 ( input Reset, frame_clk,
 				 else
 					Ball_Y_Pos <= Ball_Y_Max;
 					
+					
+				 if (keycode[1])
+					Ball_Y_Pos <= Ball_Y_Pos - 3;
 					
 				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 			

@@ -117,29 +117,32 @@ module  ball1 ( input Reset, frame_clk,
 
 					if (keycode[4] == 1)
 						if (Ball_X_Pos > Ball_X_Min + ATM_field)
-							Ball_X_Motion <= -1;//Left
+							Ball_X_Motion <= -5;//Left
 						else
 							Ball_X_Motion <= 0;							
 						
 					if (keycode[2] == 1)
 						if (Ball_X_Pos < Ball_X_Max - ATM_field)
-							Ball_X_Motion <= 1;//Right
+							Ball_X_Motion <= 5;//Right
 						else
 							Ball_X_Motion <= 0;
 							
 						
 					if (keycode[3] == 1)
 						if (Ball_Y_Pos == Ball_Y_Max)
-							Ball_Y_Motion <= Initial_velocity;
+							Ball_Y_Motion <= Initial_velocity + 2;
 													
 					if (~(keycode[4] | keycode[2]))
 						Ball_X_Motion <= 0;
-				 
+					 
 				 
 				 
 				 
 				 if (Ball_Y_Pos < Ball_Y_Max)
-					Ball_Y_Motion <= Ball_Y_Motion + gravity;
+				   if (keycode[0])
+						Ball_Y_Motion <= Initial_velocity;
+					else
+						Ball_Y_Motion <= Ball_Y_Motion + gravity;
 				 
 				 
 				 if (Ball_Y_Pos + Ball_Y_Motion <= Ball_Y_Max)

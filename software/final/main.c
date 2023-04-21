@@ -216,9 +216,9 @@ int main() {
 					    	keycode |= 0x02;
 					    	break;
 					    }
-					    case 0x55:
+					    case 0x37:
 					    {
-					    	keycode |= 0x00;
+					    	keycode |= 0x01;
 					    	break;
 
 					    }
