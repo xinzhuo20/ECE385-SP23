@@ -158,14 +158,14 @@ module  ball1 ( input Reset, frame_clk, die,
 
 						
 
-				 if (Ball_Y_Pos + Ball_Y_Motion <= Ball_Y_Max)
+				 if (Ball_Y_Pos + Ball_Y_Motion <= Ball_Y_Max && current_state_out == PLAYING)
 					Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				 else
 					Ball_Y_Pos <= Ball_Y_Max;
 					
 				
-
-				Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
+				 if (current_state_out == PLAYING)
+					Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 			
 			
 	  /**************************************************************************************
@@ -182,23 +182,9 @@ module  ball1 ( input Reset, frame_clk, die,
     end
      
 	  
-//		assign	BallX = Ball_X_Pos;
+		assign	BallX = Ball_X_Pos;
 //   
-//		assign 	BallY = Ball_Y_Pos;
-
-		always_comb
-		begin
-			if ((current_state_out != IDLE) & (current_state_out != GAME_OVER))
-				begin
-					BallX = Ball_X_Pos;
-					BallY = Ball_Y_Pos;
-				end
-			else
-				begin
-					BallX = Ball_X_Center;
-					BallY = Ball_Y_Center;
-				end
-		end
+		assign 	BallY = Ball_Y_Pos;
 		
 		assign	BallS = Ball_Size;
    

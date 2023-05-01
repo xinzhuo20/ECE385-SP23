@@ -186,13 +186,13 @@ logic [11:0] OffsetX0, OffsetY0, OffsetX1, OffsetY1;
 logic ball_on0, ball_on1, ball0_win, ball1_win, game_over;
 logic [23:0] CharacterRGB0_left, CharacterRGB0_right, CharacterRGB1_left, CharacterRGB1_right;
 
-MarioROM_left Mario0_left (.Address(Address0),.CharacterRGB(CharacterRGB0_left));
+MarioROM_left Mario0_left (.Address(Address0),.CharacterRGB(CharacterRGB0_left),.switch(SW[9]));
 
-MarioROM_left Mario1_left (.Address(Address1),.CharacterRGB(CharacterRGB1_left));
+MarioROM_left Mario1_left (.Address(Address1),.CharacterRGB(CharacterRGB1_left),.switch(SW[8]));
 
-MarioROM_right Mario0_right (.Address(Address0),.CharacterRGB(CharacterRGB0_right));
+MarioROM_right Mario0_right (.Address(Address0),.CharacterRGB(CharacterRGB0_right),.switch(SW[9]));
 
-MarioROM_right Mario1_right (.Address(Address1),.CharacterRGB(CharacterRGB1_right));
+MarioROM_right Mario1_right (.Address(Address1),.CharacterRGB(CharacterRGB1_right),.switch(SW[8]));
 
 
 // Calculate the Address based on OffsetX and OffsetY

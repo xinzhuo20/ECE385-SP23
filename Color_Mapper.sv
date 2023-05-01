@@ -13,7 +13,8 @@
 //-------------------------------------------------------------------------
 
 
-module  color_mapper ( input clk,
+module  color_mapper ( input clk, 
+							  input [1:0] current_state_out,
 							  input [2:0] character1_lives, character2_lives,
 							  input        [9:0] BallX0, BallY0, BallX1, BallY1, DrawX, DrawY, Ball_size,
 							  input logic [23:0] CharacterRGB0_left, CharacterRGB0_right, CharacterRGB1_left, CharacterRGB1_right,
@@ -42,7 +43,8 @@ module  color_mapper ( input clk,
 //	 assign DistX = DrawX - BallX;
 //    assign DistY = DrawY - BallY;
 //    assign Size = Ball_size;
-
+     `include "state_definition.sv"
+	  
 	 logic ch0_left, ch1_left, ch0_left_prev, ch1_left_prev;
 	 logic [7:0] score1_r, score1_g, score1_b;
 	 logic [7:0] score2_r, score2_g, score2_b;
@@ -52,6 +54,7 @@ module  color_mapper ( input clk,
 	 logic [7:0] score3r_r, score3r_g, score3r_b;
 	 logic [7:0] score0_r, score0_g, score0_b;
 	 logic [7:0] score0r_r, score0r_g, score0r_b;
+	 logic [7:0] winr, wing, winb;
 
 	 
 	
@@ -83,7 +86,10 @@ zero_display scorer0 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB
 one_display scorer1 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB({score1r_r, score1r_g, score1r_b}));
 two_display scorer2 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB({score2r_r, score2r_g, score2r_b}));
 three_display scorer3 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB({score3r_r, score3r_g, score3r_b}));
-	 
+	
+Saber_win Eastern_egg (.Address((DrawX - 251) + (285 - DrawY) * 136), .CharacterRGB({winr, wing, winb}), .left(!character2_lives));
+
+	
 //	 background baoguo (.back_address(BallY*640+BallX), .*);
 always_ff @(posedge clk)
 begin
@@ -129,9 +135,12 @@ end
         else 
             ball_on1 = 1'b0;
     end 	
-	  
+
     always_comb
-    begin:RGB_Display
+	 begin:RGB_Display
+	if (DrawX >= 251 && DrawX <= 387 && DrawY >= 193 && DrawY <= 285 && current_state_out == GAME_OVER)
+			{Red, Green, Blue} = {winr, wing, winb};			
+	else
 	 
     if (is_scoreboard_area_left)
     begin
@@ -140,7 +149,7 @@ end
             3'b001: {Red, Green, Blue} = {score1_r, score1_g, score1_b};
             3'b010: {Red, Green, Blue} = {score2_r, score2_g, score2_b};
             3'b011: {Red, Green, Blue} = {score3_r, score3_g, score3_b};
-            default: {Red, Green, Blue} = 24'h000000; // Set default color (black) for an unrecognized switch value
+            default: {Red, Green, Blue} = {score0_r, score0_g, score0_b}; // Set default color (black) for an unrecognized switch value
         endcase
     end
 	 
@@ -151,7 +160,7 @@ end
             3'b001: {Red, Green, Blue} = {score1r_r, score1r_g, score1r_b};
             3'b010: {Red, Green, Blue} = {score2r_r, score2r_g, score2r_b};
             3'b011: {Red, Green, Blue} = {score3r_r, score3r_g, score3r_b};
-            default: {Red, Green, Blue} = 24'h000000; // Set default color (black) for an unrecognized switch value
+            default: {Red, Green, Blue} = {score0r_r, score0r_g, score0r_b}; // Set default color (black) for an unrecognized switch value
         endcase
     end
 	 
