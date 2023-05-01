@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  ball1 ( input Reset, frame_clk,
+module  ball1 ( input Reset, frame_clk, die,
 					input [7:0] keycode,
                output [9:0]  BallX, BallY, BallS );
     
@@ -53,7 +53,16 @@ module  ball1 ( input Reset, frame_clk,
 
 						
         end
-           
+          
+			 
+		  else if (die)
+			begin
+				Ball_Y_Pos <= Ball_Y_Center;
+				Ball_X_Pos <= Ball_X_Center;
+			end
+			 
+			
+			
         else 
         begin 
 		  
@@ -143,15 +152,17 @@ module  ball1 ( input Reset, frame_clk,
 						Ball_Y_Motion <= Initial_velocity;
 					else
 						Ball_Y_Motion <= Ball_Y_Motion + gravity;
-				 
-				 
+
+						
+
 				 if (Ball_Y_Pos + Ball_Y_Motion <= Ball_Y_Max)
 					Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				 else
 					Ball_Y_Pos <= Ball_Y_Max;
 					
-					
-				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
+				
+
+				Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 			
 			
 	  /**************************************************************************************

@@ -1,4 +1,4 @@
-module MarioROM (
+module MarioROM_left (
     input logic [7:0] Address,
     output logic [23:0] CharacterRGB
 );

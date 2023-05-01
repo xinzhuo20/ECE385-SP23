@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  ball0 ( input Reset, frame_clk,
+module  ball0 ( input Reset, frame_clk, die,
 					input [7:0] keycode,
                output [9:0]  BallX, BallY, BallS );
     
@@ -35,7 +35,7 @@ module  ball0 ( input Reset, frame_clk,
     assign Ball_Size = 16;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
 	
-//	 assign gravity = (keycode[1]) ? 0 : 1;
+	 assign gravity = (keycode[1]) ? 0 : 1;
 
 	 
     always_ff @ (posedge Reset or posedge frame_clk )
@@ -58,6 +58,12 @@ module  ball0 ( input Reset, frame_clk,
 						
         end
            
+		  else if (die)
+			begin
+				Ball_Y_Pos <= Ball_Y_Center;
+				Ball_X_Pos <= Ball_X_Center;
+			end
+			
         else 
         begin 
 		  
@@ -143,16 +149,13 @@ module  ball0 ( input Reset, frame_clk,
 				 if (Ball_Y_Pos < Ball_Y_Max)
 					Ball_Y_Motion <= Ball_Y_Motion + gravity;
 				 
-				 
+			 
 				 if (Ball_Y_Pos + Ball_Y_Motion <= Ball_Y_Max)
 					Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				 else
 					Ball_Y_Pos <= Ball_Y_Max;
-					
-					
-				 if (keycode[1])
-					Ball_Y_Pos <= Ball_Y_Pos - 3;
-					
+				
+
 				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 			
 			

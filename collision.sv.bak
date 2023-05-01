@@ -1,0 +1,5 @@
+module collision_detection
+(
+input [9:0] x0, x1, y0, y1
+output ball0_win, ball1_win
+)
