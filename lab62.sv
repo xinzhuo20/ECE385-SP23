@@ -160,22 +160,26 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		.keycode_export(keycode),
 	 );
 
+	 `include "state_definition.sv"
 
 //instantiate a vga_controller, ball, and color_mapper here with the ports.
 
-//game_fsm (.Reset(Reset_h), .frame_clk(VGA_VS), .character1_stepped(ball1_win), .character2_stepped(ball0_win), .start_game(KEY[1]), .*)
+game_fsm (.Reset(Reset_h), .frame_clk(VGA_VS), .character1_stepped(ball0_win), .character2_stepped(ball1_win), .start_game(~KEY[1]), .*);
 
 
 collision_detection (.*, .frame_clk(VGA_VS), .x_0(ballxsig0), .x_1(ballxsig1), .y_0(ballysig0), .y_1(ballysig1));
 												  											  
 vga_controller vga0 (.*, .Clk (MAX10_CLK1_50), .Reset (Reset_h), .hs (VGA_HS), .vs (VGA_VS), .pixel_clk(VGA_CLK), .DrawX (drawxsig), .DrawY (drawysig));
 
-ball0 ball0 (.Reset (Reset_h), .die(ball1_win), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig0), .BallY (ballysig0), .BallS (ballsizesig));
+ball0 ball0 (.*, .Reset (Reset_h), .die(ball1_win), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig0), .BallY (ballysig0), .BallS (ballsizesig));
 
-ball1 ball1 (.Reset (Reset_h), .die(ball0_win), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig1), .BallY (ballysig1), .BallS (ballsizesig));
+ball1 ball1 (.*, .Reset (Reset_h), .die(ball0_win), .frame_clk (VGA_VS), .keycode (keycode), .BallX (ballxsig1), .BallY (ballysig1), .BallS (ballsizesig));
 
-color_mapper cm0 (.*, .switch({SW[1],SW[0]}), .clk(MAX10_CLK1_50), .BallX0 (ballxsig0), .BallY0 (ballysig0), .BallX1 (ballxsig1), .BallY1 (ballysig1), .DrawX (drawxsig), .DrawY (drawysig), .Ball_size (ballsizesig));
+color_mapper cm0 (.*, .clk(MAX10_CLK1_50), .BallX0 (ballxsig0), .BallY0 (ballysig0), .BallX1 (ballxsig1), .BallY1 (ballysig1), .DrawX (drawxsig), .DrawY (drawysig), .Ball_size (ballsizesig));
 
+
+logic [2:0] character1_lives, character2_lives;
+logic [1:0] current_state_out;
 logic [7:0] Address0, Address1;
 logic [11:0] OffsetX0, OffsetY0, OffsetX1, OffsetY1;
 //logic [8:0] PixelData0, PixelData1;

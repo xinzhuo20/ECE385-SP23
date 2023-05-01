@@ -1,20 +1,24 @@
 module game_fsm (
-    input wire Reset,
-    input wire frame_clk,
-    input wire character1_stepped,
-    input wire character2_stepped,
-    input wire start_game,
-    output wire reg game_over
-//	 output [1:0] li
+    input Reset,
+    input frame_clk,
+    input character1_stepped,
+    input character2_stepped,
+    input start_game,
+    output game_over,
+    output logic [2:0] character1_lives,
+    output logic [2:0] character2_lives,
+    output logic [1:0] current_state_out
 );
 
+     `include "state_definition.sv"
+
     // State encoding
-    typedef enum logic [1:0] {IDLE, PLAYING, GAME_OVER} state_t;
-    state_t current_state, next_state;
+
+	  state_t current_state, next_state;
 
     // Initial lives for both characters
     localparam int INITIAL_LIVES = 3;
-    reg [2:0] character1_lives, character2_lives;
+    reg [2:0] character1_lives_reg, character2_lives_reg;
 
     // State transition logic
     always_comb begin
@@ -25,7 +29,7 @@ module game_fsm (
                     next_state = PLAYING;
             end
             PLAYING: begin
-                if (character1_lives == 0 || character2_lives == 0)
+                if (character1_lives_reg == 0 || character2_lives_reg == 0)
                     next_state = GAME_OVER;
             end
             GAME_OVER: begin
@@ -39,19 +43,22 @@ module game_fsm (
     always_ff @(posedge frame_clk or posedge Reset) begin
         if (Reset) begin
             current_state <= IDLE;
-            character1_lives <= INITIAL_LIVES;
-            character2_lives <= INITIAL_LIVES;
+            character1_lives_reg <= INITIAL_LIVES;
+            character2_lives_reg <= INITIAL_LIVES;
         end else begin
             current_state <= next_state;
 
             if (character1_stepped && current_state == PLAYING)
-                character2_lives <= character2_lives - 1;
+                character2_lives_reg <= character2_lives_reg - 1;
             if (character2_stepped && current_state == PLAYING)
-                character1_lives <= character1_lives - 1;
+                character1_lives_reg <= character1_lives_reg - 1;
         end
     end
 
     // Output logic
     assign game_over = (current_state == GAME_OVER);
+    assign character1_lives = character1_lives_reg;
+    assign character2_lives = character2_lives_reg;
+    assign current_state_out = current_state;
 
 endmodule

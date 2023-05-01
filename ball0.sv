@@ -14,9 +14,11 @@
 
 
 module  ball0 ( input Reset, frame_clk, die,
+					input [1:0] current_state_out,
 					input [7:0] keycode,
                output [9:0]  BallX, BallY, BallS );
     
+	 `include "state_definition.sv"
     logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
 	 
 	 int Initial_velocity = -10;
@@ -173,10 +175,24 @@ module  ball0 ( input Reset, frame_clk, die,
     end
      
 	  
-		assign	BallX = Ball_X_Pos;
-   
-		assign 	BallY = Ball_Y_Pos;
-   
+//		assign	BallX = Ball_X_Pos;
+//   
+//		assign 	BallY = Ball_Y_Pos;
+
+		always_comb
+		begin
+			if ((current_state_out != IDLE) & (current_state_out != GAME_OVER))
+				begin
+					BallX = Ball_X_Pos;
+					BallY = Ball_Y_Pos;
+				end
+			else
+				begin
+					BallX = Ball_X_Center;
+					BallY = Ball_Y_Center;
+				end
+		end
+		
 		assign	BallS = Ball_Size;
     
 

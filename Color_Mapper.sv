@@ -14,7 +14,7 @@
 
 
 module  color_mapper ( input clk,
-							  input [1:0] ,
+							  input [2:0] character1_lives, character2_lives,
 							  input        [9:0] BallX0, BallY0, BallX1, BallY1, DrawX, DrawY, Ball_size,
 							  input logic [23:0] CharacterRGB0_left, CharacterRGB0_right, CharacterRGB1_left, CharacterRGB1_right,
 							  input logic [7:0] Address0, Address1, keycode,
@@ -50,6 +50,9 @@ module  color_mapper ( input clk,
 	 logic [7:0] score1r_r, score1r_g, score1r_b;
 	 logic [7:0] score2r_r, score2r_g, score2r_b;
 	 logic [7:0] score3r_r, score3r_g, score3r_b;
+	 logic [7:0] score0_r, score0_g, score0_b;
+	 logic [7:0] score0r_r, score0r_g, score0r_b;
+
 	 
 	
 	 logic is_scoreboard_area_left, is_scoreboard_area_right;
@@ -70,11 +73,13 @@ begin
 	else if ((DrawX >= 575 & DrawY <= 64))
 		is_scoreboard_area_right = 1;
 end
-		
+	
+zero_display score0 (.Address(DrawX + (64 - DrawY) * 64), .CharacterRGB({score0_r, score0_g, score0_b}));	
 one_display score1 (.Address(DrawX + (64 - DrawY) * 64), .CharacterRGB({score1_r, score1_g, score1_b}));
 two_display score2 (.Address(DrawX + (64 - DrawY) * 64), .CharacterRGB({score2_r, score2_g, score2_b}));
 three_display score3 (.Address(DrawX + (64 - DrawY) * 64), .CharacterRGB({score3_r, score3_g, score3_b}));
 
+zero_display scorer0 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB({score0r_r, score0r_g, score0r_b}));
 one_display scorer1 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB({score1r_r, score1r_g, score1r_b}));
 two_display scorer2 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB({score2r_r, score2r_g, score2r_b}));
 three_display scorer3 (.Address((DrawX - 575) + (64 - DrawY) * 64), .CharacterRGB({score3r_r, score3r_g, score3r_b}));
@@ -130,20 +135,22 @@ end
 	 
     if (is_scoreboard_area_left)
     begin
-        unique case (switch)
-            2'b00: {Red, Green, Blue} = {score1_r, score1_g, score1_b};
-            2'b01: {Red, Green, Blue} = {score2_r, score2_g, score2_b};
-            2'b10: {Red, Green, Blue} = {score3_r, score3_g, score3_b};
+        unique case (character1_lives)
+            3'b000: {Red, Green, Blue} = {score0_r, score0_g, score0_b};
+            3'b001: {Red, Green, Blue} = {score1_r, score1_g, score1_b};
+            3'b010: {Red, Green, Blue} = {score2_r, score2_g, score2_b};
+            3'b011: {Red, Green, Blue} = {score3_r, score3_g, score3_b};
             default: {Red, Green, Blue} = 24'h000000; // Set default color (black) for an unrecognized switch value
         endcase
     end
 	 
 	 else if (is_scoreboard_area_right)
     begin
-        unique case (switch)
-            2'b00: {Red, Green, Blue} = {score1r_r, score1r_g, score1r_b};
-            2'b01: {Red, Green, Blue} = {score2r_r, score2r_g, score2r_b};
-            2'b10: {Red, Green, Blue} = {score3r_r, score3r_g, score3r_b};
+        unique case (character2_lives)
+            3'b000: {Red, Green, Blue} = {score0r_r, score0r_g, score0r_b};
+            3'b001: {Red, Green, Blue} = {score1r_r, score1r_g, score1r_b};
+            3'b010: {Red, Green, Blue} = {score2r_r, score2r_g, score2r_b};
+            3'b011: {Red, Green, Blue} = {score3r_r, score3r_g, score3r_b};
             default: {Red, Green, Blue} = 24'h000000; // Set default color (black) for an unrecognized switch value
         endcase
     end

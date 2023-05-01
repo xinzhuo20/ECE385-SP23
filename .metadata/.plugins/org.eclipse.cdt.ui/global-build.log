@@ -1120,3 +1120,87 @@ Info: Building ../final_bsp/
 D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
 [BSP build complete]
 [final build complete]
+22:30:11 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:30:12 **** Incremental Build of configuration Nios II for project final_bsp ****
+make all 
+[BSP build complete]
+22:30:24 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:35:55 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:35:56 **** Incremental Build of configuration Nios II for project final_bsp ****
+make all 
+[BSP build complete]
+22:36:03 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:36:34 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:36:35 **** Incremental Build of configuration Nios II for project final_bsp ****
+make all 
+[BSP build complete]
+22:36:43 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:42:56 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:42:57 **** Incremental Build of configuration Nios II for project final_bsp ****
+make all 
+[BSP build complete]
+22:43:04 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:51:22 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:51:23 **** Incremental Build of configuration Nios II for project final_bsp ****
+make all 
+[BSP build complete]
+22:52:11 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]
+22:52:12 **** Incremental Build of configuration Nios II for project final_bsp ****
+make all 
+[BSP build complete]
+22:52:27 **** Incremental Build of configuration Nios II for project final ****
+make all 
+Info: Building ../final_bsp/
+D:/Installation_location/quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../final_bsp/
+[BSP build complete]
+[final build complete]

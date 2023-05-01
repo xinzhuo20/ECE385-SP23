@@ -1,4 +1,10 @@
 
+State Machine - |lab62|game_fsm:comb_51|current_state
+Name current_state.IDLE current_state.GAME_OVER current_state.PLAYING 
+current_state.IDLE 0 0 0 
+current_state.PLAYING 1 0 1 
+current_state.GAME_OVER 1 1 0 
+
 State Machine - |lab62|lab62_soc:u0|lab62_soc_sdram:sdram|m_next
 Name m_next.010000000 m_next.000010000 m_next.000001000 m_next.000000001 
 m_next.000000001 0 0 0 0 
